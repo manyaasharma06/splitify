@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Expense Splitter</title>
+  <link rel="stylesheet" href="sty.css">
+</head>
+<body>
+  <section class="landing">
+    <div class="overlay">
+      <h1 class="title">Splitlify</h1>
+      <p class="subtitle">Your simple, fast expense splitter</p>
+
+      <div class="buttons">
+        <button onclick="selectMode('equal')">Equal Split</button>
+        <button onclick="selectMode('custom')">Who Paid for Whom</button>
+      </div>
+    </div>
+
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+    <div class="blob blob4"></div>
+  </section>
+
+  <div class="container">
+    <h1>Expense Splitter</h1>
+
+    <div id="form-container" class="form"></div>
+
+    <button class="clear-btn" onclick="clearAll()">Clear All</button>
+
+    <h2>All Expenses</h2>
+    <ul id="expenseList"></ul>
+
+    <h2>Balances</h2>
+    <ul id="balanceList"></ul>
+
+    <h2>Expense Distribution</h2>
+    <canvas id="expenseChart"></canvas>
+  </div>
+    
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="scr.js"></script>
+</body>
+</html>
