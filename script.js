@@ -171,29 +171,49 @@ function calculateCustom() {
     const split = exp.amount / exp.forWhom.length;
 
     exp.forWhom.forEach(p => {
+      p = p.trim().toLowerCase();
       balances[p] = (balances[p] || 0) - split;
     });
 
-    balances[exp.payer] = (balances[exp.payer] || 0) + exp.amount;
+    const payer = exp.payer.trim().toLowerCase();
+    balances[payer] = (balances[payer] || 0) + exp.amount;
   });
 
-  const people = Object.keys(balances);
   const list = document.getElementById("balanceList");
   list.innerHTML = "";
 
-  if (people.length === 2) {
-    const [p1, p2] = people;
-    const amt = balances[p1];
+  // 🔥 Separate creditors & debtors
+  let creditors = [];
+  let debtors = [];
+
+  Object.keys(balances).forEach(person => {
+    let amount = balances[person];
+
+    if (amount > 0) {
+      creditors.push({ person, amount });
+    } else if (amount < 0) {
+      debtors.push({ person, amount: Math.abs(amount) });
+    }
+  });
+
+  // 🔥 SETTLEMENT LOGIC
+  let i = 0, j = 0;
+
+  while (i < debtors.length && j < creditors.length) {
+    let debtor = debtors[i];
+    let creditor = creditors[j];
+
+    let settleAmount = Math.min(debtor.amount, creditor.amount);
 
     const li = document.createElement("li");
-
-    if (amt > 0) {
-      li.textContent = `${p2} owes ${p1} ₹${amt.toFixed(0)}`;
-    } else {
-      li.textContent = `${p1} owes ${p2} ₹${Math.abs(amt).toFixed(0)}`;
-    }
-
+    li.textContent = `${debtor.person} owes ${creditor.person} ₹${settleAmount.toFixed(2)}`;
     list.appendChild(li);
+
+    debtor.amount -= settleAmount;
+    creditor.amount -= settleAmount;
+
+    if (debtor.amount === 0) i++;
+    if (creditor.amount === 0) j++;
   }
 
   renderChart(balances);
